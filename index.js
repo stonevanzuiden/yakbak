@@ -30,6 +30,7 @@ module.exports = function (host, opts) {
     debug('req', req.url);
 
     return buffer(req).then(function (body) {
+
       var file = path.join(opts.dirname, tapename(req, body));
 
       return Promise.try(function () {
@@ -70,7 +71,15 @@ module.exports = function (host, opts) {
  */
 
 function tapename(req, body) {
-  return hash.sync(req, Buffer.concat(body)) + '.js';
+  return hash.sync(req, Buffer.concat(body), {
+    includeHeaders: [
+      'host',
+      'access-control-request-method',
+      'referer',
+      'accept',
+      'origin'
+    ]
+  }) + '.js';
 }
 
 /**
