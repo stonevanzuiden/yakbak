@@ -100,6 +100,27 @@ describe('yakbak', function () {
       });
     });
 
+    // describe('when given a custom template path', function () {
+    //   beforeEach(function () {
+    //     yakbak = subject(server.host, { dirname: tmpdir.dirname, template: './test/fixtures/customTape.ejs' });
+    //   });
+
+    //   it('uses the custom template to create the tape', function (done) {
+    //     request(yakbak)
+    //     .get('/record/1')
+    //     .query({ foo: 'bar' })
+    //     .set('host', 'localhost:3001')
+    //     .expect('X-Yakbak-Tape', '3f142e515cb24d1af9e51e6869bf666f')
+    //     .expect('Content-Type', 'text/html')
+    //     .expect(201, 'OK')
+    //     .end(function (err) {
+    //       assert.ifError(err);
+    //       assert(fs.existsSync(tmpdir.join('3f142e515cb24d1af9e51e6869bf666f.js')));
+    //       done();
+    //     });
+    //   });
+    // });
+
     describe("when recording is not enabled", function () {
       beforeEach(function () {
         yakbak = subject(server.host, { dirname: tmpdir.dirname, noRecord: true });

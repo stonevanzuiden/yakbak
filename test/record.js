@@ -8,12 +8,13 @@ var createServer = require('./helpers/server');
 var createTmpdir = require('./helpers/tmpdir');
 var assert = require('assert');
 var http = require('http');
+var path = require('path');
 var fs = require('fs');
 
 var fixture = require('./fixtures');
 
 describe('record', function () {
-  var server, tmpdir, req;
+  var server, tmpdir, req, tpl;
 
   afterEach(function (done) {
     server.teardown(done);
@@ -21,6 +22,7 @@ describe('record', function () {
 
   beforeEach(function (done) {
     tmpdir = createTmpdir(done);
+    tpl = path.resolve(__dirname, '../src/tape.ejs');
   });
 
   afterEach(function (done) {
@@ -43,7 +45,7 @@ describe('record', function () {
 
     it('returns the filename', function (done) {
       req.on('response', function (res) {
-        subject(req, res, tmpdir.join('foo.js')).then(function (filename) {
+        subject(req, res, tmpdir.join('foo.js'), tpl).then(function (filename) {
           assert.equal(filename, tmpdir.join('foo.js'));
           done();
         }).catch(function (err) {
@@ -82,7 +84,7 @@ describe('record', function () {
         makeRequest(requestHandler, function (res) {
           var expected = fixture('base64').replace('{addr}', server.addr).replace('{port}', server.port);
 
-          subject(res.req, res, tmpdir.join('foo.js')).then(function (filename) {
+          subject(res.req, res, tmpdir.join('foo.js'), tpl).then(function (filename) {
             assert.equal(fs.readFileSync(filename, 'utf-8'), expected);
             done();
           });
@@ -102,7 +104,7 @@ describe('record', function () {
         makeRequest(requestHandler, function (res) {
           var expected = fixture('utf8').replace('{addr}', server.addr).replace('{port}', server.port);
 
-          subject(res.req, res, tmpdir.join('foo.js')).then(function (filename) {
+          subject(res.req, res, tmpdir.join('foo.js'), tpl).then(function (filename) {
             assert.equal(fs.readFileSync(filename, 'utf-8'), expected);
             done();
           });

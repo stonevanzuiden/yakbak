@@ -24,6 +24,8 @@ var debug = require('debug')('yakbak:server');
 module.exports = function (host, opts) {
   assert(opts.dirname, 'You must provide opts.dirname');
 
+  var template = opts.template || path.resolve(__dirname, './src/tape.ejs');
+
   return function (req, res) {
     mkdirp.sync(opts.dirname);
 
@@ -40,7 +42,7 @@ module.exports = function (host, opts) {
           throw new RecordingDisabledError('Recording Disabled');
         } else {
           return proxy(req, body, host).then(function (pres) {
-            return record(pres.req, pres, file);
+            return record(pres.req, pres, file, template);
           });
         }
 
